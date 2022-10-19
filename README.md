@@ -7,3 +7,4 @@
 - [Single node dev cluster hashicorp nomad](https://viktorpenkov.com/blog/single-node-dev-cluster-hashicorp/)
     - Really helpful guide in setting up a single node Nomad/Consul stack
 - [Testing Hashicorp Nomad](https://meta.caspershire.net/testing-hashicorp-nomad/)
+- [Nomad networking explained(https://mrkaran.dev/posts/nomad-networking-explained/)
