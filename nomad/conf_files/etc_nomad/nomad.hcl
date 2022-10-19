@@ -20,4 +20,9 @@ client {
     path = "/opt/registry/data"
     read_only = false
   }
+
+  options = {
+    # Blacklist the Java driver
+    "driver.blacklist" = "java"
+  }
 }
