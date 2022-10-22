@@ -60,6 +60,8 @@ EOH
             template {
                 change_mode = "noop"
                 destination = "local/servers.json"
+
+                # If "Password" doesn't work, use this: "PassFile": "/root/.pgpass",
                 data = <<EOH
 {
     "Servers": {
@@ -69,7 +71,6 @@ EOH
             "Port": 5432,
             "Username": "postgres",
             "Password": "postgres",
-            # "PassFile": "/root/.pgpass",
             "Host": "192.168.1.22",
             "SSLMode": "disable",
             "MaintenanceDB": "postgres"
