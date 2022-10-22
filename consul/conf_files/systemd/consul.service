@@ -9,7 +9,7 @@ Type=notify
 User=consul
 Group=consul
 # Put your server's IP in the -bind arg
-ExecStart=/usr/bin/consul agent -bind 1.2.3.4 -config-dir=/etc/consul.d/
+ExecStart=/usr/bin/consul agent -config-dir=/etc/consul.d/
 ExecReload=/bin/kill --signal HUP $MAINPID
 KillMode=process
 KillSignal=SIGTERM
