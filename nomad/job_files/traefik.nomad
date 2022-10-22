@@ -22,6 +22,14 @@ job "traefik" {
             name = "traefik-http"
             provider = "nomad"
             port = "http"
+
+            check {
+                name     = "alive"
+                type     = "tcp"
+                port     = "http"
+                interval = "10s"
+                timeout  = "2s"
+            }
         }
 
         task "server" {
@@ -40,15 +48,19 @@ job "traefik" {
                     "--providers.nomad=true",
                     "--providers.nomad.endpoint.address=http://192.168.1.22:4646",
                     "--providers.consulcatalog.refreshInterval=30s",
-                    "--providers.consulcatalog.prefix=lab1",
+                    # "--providers.consulcatalog.prefix=lab1",
                     "--providers.consulcatalog.endpoint.address=192.168.1.22:8500",
                     "--providers.consulcatalog.endpoint.scheme=http",
                     "--providers.consulcatalog.endpoint.datacenter=lab1",
                     "--providers.consulcatalog.connectAware=true",
                     "--providers.consulcatalog.serviceName=traefik",
                     "--providers.consulcatalog.watch=true"
-
                 ]
+            }
+
+            resources {
+                cpu = 100
+                memory = 256
             }
         }
     }

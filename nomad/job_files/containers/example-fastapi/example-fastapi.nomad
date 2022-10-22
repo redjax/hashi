@@ -7,13 +7,14 @@ job "example-fastapi" {
         network {
             port "http" {
                 to = 8000
+                static = 8000
             }
         }
 
         service {
             name = "example-fastapi"
             port = "http"
-            provider = "nomad"
+            provider = "consul"
 
             tags = [
                 "traefik.enable=true",
