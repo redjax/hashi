@@ -23,7 +23,7 @@ job "http-echo" {
 
       resources {
         cores = 1
-        memory =528
+        memory = 528
       }
     }
   }
