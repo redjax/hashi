@@ -1,6 +1,7 @@
 #!/bin/bash
 
-randkey=$(openssl rand -base64 32)
+# randkey=$(openssl rand -base64 32)
+randkey=$(consul keygen)
 
 echo ""
 echo "Hashicorp Consul encrypt key:"
