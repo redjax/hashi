@@ -43,6 +43,7 @@ job "registry" {
         memory = 512
       }
 
+      ## Create the volume mount on your host first
       volume_mount {
         volume      = "registry"
         destination = "/var/lib/registry"
