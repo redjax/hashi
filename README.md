@@ -8,3 +8,4 @@
     - Really helpful guide in setting up a single node Nomad/Consul stack
 - [Testing Hashicorp Nomad](https://meta.caspershire.net/testing-hashicorp-nomad/)
 - [Nomad networking explained(https://mrkaran.dev/posts/nomad-networking-explained/)
+- [Traefik: Use Traefik as proxy for Nomad](https://traefik.io/blog/traefik-proxy-fully-integrates-with-hashicorp-nomad/)

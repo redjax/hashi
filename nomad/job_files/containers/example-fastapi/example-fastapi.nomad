@@ -5,18 +5,20 @@ job "example-fastapi" {
     group "example-fastapi" {
         count = 1
         network {
-            port "http" {}
+            port "http" {
+                to = 8000
+            }
         }
 
         service {
             name = "example-fastapi"
             port = "http"
+            provider = "nomad"
+
             tags = [
-                "http",
-                "proxy"
+                "traefik.enable=true",
+                "traefik.http.routers.http.rule=Path(`/example-fastapi`)"
             ]
-            provider = "consul"
-            connect {}
         }
 
         task "backend" {
