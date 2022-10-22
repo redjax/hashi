@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "Nomad test with Database"
+version = "0.1.0"
+description = "Testing FastAPI Docker container with database in Nomad"
+authors = [""]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.85.0"
+uvicorn = "^0.18.3"
+SQLAlchemy = "^1.4.41"
+python-dotenv = "^0.21.0"
+httpx = "^0.23.0"
+python-multipart = "^0.0.5"
+sqlmodel = "^0.0.8"
+fastapi-crudrouter = "^0.8.5"
+psycopg2-binary = "^2.9.4"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
