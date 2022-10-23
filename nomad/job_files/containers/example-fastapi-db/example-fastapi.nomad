@@ -31,20 +31,42 @@ job "example-fastapi-db" {
         task "backend" {
             driver = "docker"
 
-            env {
-                APP_TITLE="Demo FastAPI + Postgres in Nomad"
-                APP_DESCRIPTION="FastAPI portion of Nomad + Postgres job group"
-                APP_VERSION="0.2"
-
-                LOG_LEVEL="DEBUG"
-
-                DB_TYPE="postgres"
-                DB_HOST="192.168.1.22"
-                DB_PORT="5432"
-                DB_USER="postgres"
-                DB_PASSWORD="postgres"
-                DB_NAME="test"
+            ## Load environment from variables configured in Nomad webUI
+            template {
+                destination = "${NOMAD_SECRETS_DIR}/env.vars"
+                env = true
+                change_mode = "restart"
+                data = <<EOF
+{{- with nomadVar "nomad/jobs/example-fastapi-db" -}}
+APP_TITLE = {{ .APP_TITLE }}
+APP_DESCRIPTION = {{ .APP_DESCRIPTION }}
+APP_VERSION = {{ .APP_VERSION }}
+LOG_LEVEL = {{ .LOG_LEVEL }}
+DB_TYPE = {{ .DB_TYPE }}
+DB_HOST = {{ .DB_HOST }}
+DB_PORT = {{ .DB_PORT }}
+DB_USER = {{ .DB_USER }}
+DB_PASSWORD = {{ .DB_PASSWORD }}
+DB_NAME = {{ .DB_NAME }}
+{{- end -}}
+EOF
             }
+
+            # env {
+                # APP_TITLE="Demo FastAPI + Postgres in Nomad"
+                # APP_TITLE=var.APP_TITLE
+                # APP_DESCRIPTION="FastAPI portion of Nomad + Postgres job group"
+                # APP_VERSION="0.2"
+
+                # LOG_LEVEL="DEBUG"
+
+                # DB_TYPE="postgres"
+                # DB_HOST="192.168.1.22"
+                # DB_PORT="5432"
+                # DB_USER="postgres"
+                # DB_PASSWORD="postgres"
+                # DB_NAME="test"
+            # }
 
             config {
                 image = "localhost:5000/example-fastapi-pg"
