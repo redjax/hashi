@@ -52,27 +52,11 @@ DB_NAME = {{ .DB_NAME }}
 EOF
             }
 
-            # env {
-                # APP_TITLE="Demo FastAPI + Postgres in Nomad"
-                # APP_TITLE=var.APP_TITLE
-                # APP_DESCRIPTION="FastAPI portion of Nomad + Postgres job group"
-                # APP_VERSION="0.2"
-
-                # LOG_LEVEL="DEBUG"
-
-                # DB_TYPE="postgres"
-                # DB_HOST="192.168.1.22"
-                # DB_PORT="5432"
-                # DB_USER="postgres"
-                # DB_PASSWORD="postgres"
-                # DB_NAME="test"
-            # }
-
             config {
                 image = "localhost:5000/example-fastapi-pg"
 
                 ports = ["http"]
-
+                ## Set working directory in container
                 work_dir = "/app"
 
             }
