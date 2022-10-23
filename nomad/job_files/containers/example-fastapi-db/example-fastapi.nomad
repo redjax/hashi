@@ -31,6 +31,22 @@ job "example-fastapi-db" {
         task "backend" {
             driver = "docker"
 
+            config {
+                image = "localhost:5000/example-fastapi-pg"
+
+                ports = ["http"]
+                ## Set working directory in container
+                work_dir = "/app"
+
+            }
+
+            volume_mount {
+                volume = "example-fastapi-db-backend"
+                ## Destination in container
+                destination = "/app"
+                read_only = "false"
+            }
+
             ## Load environment from variables configured in Nomad webUI
             template {
                 destination = "${NOMAD_SECRETS_DIR}/env.vars"
@@ -50,22 +66,6 @@ DB_PASSWORD = {{ .DB_PASSWORD }}
 DB_NAME = {{ .DB_NAME }}
 {{- end -}}
 EOF
-            }
-
-            config {
-                image = "localhost:5000/example-fastapi-pg"
-
-                ports = ["http"]
-                ## Set working directory in container
-                work_dir = "/app"
-
-            }
-
-            volume_mount {
-                volume = "example-fastapi-db-backend"
-                ## Destination in container
-                destination = "/app"
-                read_only = "false"
             }
 
             resources {
