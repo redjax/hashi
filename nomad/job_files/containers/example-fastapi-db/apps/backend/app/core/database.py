@@ -30,6 +30,7 @@ def get_engine():
             db = Postgres()
 
             log.debug(f"Postgres connection URI: {db.db_uri}")
+            log.debug(f"Postgres database: {db.db_name}")
 
         engine = create_engine(db.db_uri)
 

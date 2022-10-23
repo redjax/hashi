@@ -39,7 +39,7 @@ class PostgresBase(DatabaseBase):
     db_user: str = database_settings.DB_USER
     db_port: int = database_settings.DB_PORT
     db_password: str = database_settings.DB_PASSWORD
-    db_uri: str = f"postgresql://{db_user}:{db_password}@{db_host}/"
+    db_uri: str = f"postgresql://{db_user}:{db_password}@{db_host}/{db_name}"
 
 
 class Postgres(PostgresBase):
