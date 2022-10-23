@@ -36,7 +36,7 @@ class DatabaseSettings(Settings):
     DB_USER: str = Field(default=None, env="DB_USER")
     DB_PASSWORD: str = Field(default=None, env="DB_PASSWORD")
     DB_NAME: str = Field(default=None, env="DB_NAME")
-    # DB_URI: str = Field(default=None, env="DB_URI")
+    DB_URI: str = Field(default=None, env="DB_URI")
 
     class Config:
         validate_assignment = True
