@@ -1,7 +1,20 @@
 {
   "folders": [
     {
-      "path": ".."
+      "path": "../",
+      "name": "git_root"
+    },
+    {
+      "path": "../consul/conf_files/",
+      "name": "consul_conf",
+    },
+    {
+      "path": "../nomad/conf_files/",
+      "name": "nomad_conf"
+    },
+    {
+      "path": "../vault/conf_files",
+      "name": "vault_conf"
     }
   ],
   "settings": {
