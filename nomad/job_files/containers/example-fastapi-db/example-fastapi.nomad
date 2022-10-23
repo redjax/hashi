@@ -31,6 +31,22 @@ job "example-fastapi-db" {
         task "backend" {
             driver = "docker"
 
+            config {
+                image = "localhost:5000/example-fastapi-pg"
+
+                ports = ["http"]
+                ## Set working directory in container
+                work_dir = "/app"
+
+            }
+
+            volume_mount {
+                volume = "example-fastapi-db-backend"
+                ## Destination in container
+                destination = "/app"
+                read_only = "false"
+            }
+
             ## Load environment from variables configured in Nomad webUI
             template {
                 destination = "${NOMAD_SECRETS_DIR}/env.vars"
@@ -50,38 +66,6 @@ DB_PASSWORD = {{ .DB_PASSWORD }}
 DB_NAME = {{ .DB_NAME }}
 {{- end -}}
 EOF
-            }
-
-            # env {
-                # APP_TITLE="Demo FastAPI + Postgres in Nomad"
-                # APP_TITLE=var.APP_TITLE
-                # APP_DESCRIPTION="FastAPI portion of Nomad + Postgres job group"
-                # APP_VERSION="0.2"
-
-                # LOG_LEVEL="DEBUG"
-
-                # DB_TYPE="postgres"
-                # DB_HOST="192.168.1.22"
-                # DB_PORT="5432"
-                # DB_USER="postgres"
-                # DB_PASSWORD="postgres"
-                # DB_NAME="test"
-            # }
-
-            config {
-                image = "localhost:5000/example-fastapi-pg"
-
-                ports = ["http"]
-
-                work_dir = "/app"
-
-            }
-
-            volume_mount {
-                volume = "example-fastapi-db-backend"
-                ## Destination in container
-                destination = "/app"
-                read_only = "false"
             }
 
             resources {
