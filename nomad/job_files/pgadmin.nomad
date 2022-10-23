@@ -26,13 +26,12 @@ job "pgadmin4" {
         task "pgadmin4" {
             driver = "docker"
 
-            env {
-                PGADMIN_DEFAULT_EMAIL="admin@example.com"
-                PGADMIN_DEFAULT_PASSWORD="pgadmin"
-                PGADMIN_LISTEN_PORT="5050"
-                PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION="False"
-                PGADMIN_SERVER_JSON_FILE="/servers.json"
-            }
+            # env {
+            #     PGADMIN_DEFAULT_EMAIL="{{ .PGADMIN_DEFAULT_EMAIL }}"
+            #     PGADMIN_DEFAULT_PASSWORD="{{ .PGADMIN_DEFAULT_PASSWORD }}"
+            #     PGADMIN_LISTEN_PORT={{ .PGADMIN_LISTEN_PORT }}
+            #     PGADMIN_SERVER_JSON_FILE="/servers.json"
+            # }
 
             config {
                 image = "dpage/pgadmin4"
@@ -44,6 +43,21 @@ job "pgadmin4" {
                 ]
             }
 
+            ## Load env vars from Nomad variables
+            template {
+                destination = "${NOMAD_SECRETS_DIR}/env.vars"
+                env = true
+                change_mode = "restart"
+                data = <<EOH
+{{- with nomadVar "nomad/jobs/pgadmin4" -}}
+PGADMIN_SERVER_JSON_FILE="/servers.json"
+PGADMIN_DEFAULT_EMAIL={{ .PGADMIN_DEFAULT_EMAIL }}
+PGADMIN_DEFAULT_PASSWORD={{ .PGADMIN_DEFAULT_PASSWORD }}
+PGADMIN_LISTEN_PORT={{ .PGADMIN_LISTEN_PORT }}
+{{- end -}}
+EOH
+            }
+
             ## local/servers.passfile
             # Note: Passfile data is formatted as:
             #   hostname:port:database:username:password
@@ -52,7 +66,7 @@ job "pgadmin4" {
                 change_mode = "noop"
                 destination = "local/servers.passfile"
                 data = <<EOH
-192.168.1.22:5432:postgres:postgress:postgres
+{{ .SERVER1_PASSFILE_HOST }}:{{ .SERVER1_PASSFILE_PORT }}:{{ .SERVER1_PASSFILE_DB }}:{{ .SERVER1_PASSFILE_USERNAME }}:{{ .SERVER1_PASSFILE_PASSWORD }}
 EOH
             }
 
@@ -63,20 +77,23 @@ EOH
 
                 # If "Password" doesn't work, use this: "PassFile": "/root/.pgpass",
                 data = <<EOH
+{{- with nomadVar "nomad/jobs/pgadmin4" -}}
 {
     "Servers": {
         "1": {
-            "Name": "Example FastAPI + Postgres",
+            "Name": "{{ .SERVER1_PGDB_NAME }}",
             "Group": "Example Servers",
-            "Port": 5432,
-            "Username": "postgres",
-            "Password": "postgres",
-            "Host": "192.168.1.22",
+            "Port": {{ .SERVER1_PASSFILE_PORT }},
+            "Username": "{{ .SERVER1_PASSFILE_USERNAME }}",
+            "Password": "{{ .SERVER1_PASSFILE_PASSWORD }}",
+            "PassFile": "/root/.pgpass",
+            "Host": "{{ .SERVER1_PASSFILE_HOST }}",
             "SSLMode": "disable",
             "MaintenanceDB": "postgres"
         }
     }
 }
+{{- end -}}
 EOH
             }
 
