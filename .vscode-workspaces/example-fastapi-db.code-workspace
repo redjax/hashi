@@ -9,13 +9,13 @@
       "name": "example-fastapi-db"
     },
     {
+      "path": "../nomad/job_files/containers/example-fastapi-db/apps/postgres/",
+      "name": "example-fastapi-db_postgres"
+    },
+    {
       "path": "../nomad/job_files/containers/example-fastapi-db/apps/backend/",
       "name": "example-fastapi-db_backend"
     },
-    {
-      "path": "../nomad/job_files/containers/example-fastapi-db/apps/postgres/",
-      "name": "example-fastapi-db_postgres"
-    }
   ],
   "settings": {
     // ========================
