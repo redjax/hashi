@@ -1,9 +1,9 @@
-job "traefik" {
+job "traefik-ingress" {
 
-    datacenters = ["lab1"]
+    datacenters = ["dc1"]
     type = "service"
 
-    group "traefik" {
+    group "traefik-ingress" {
         count = 1
 
         network {
@@ -20,7 +20,7 @@ job "traefik" {
 
         service {
             name = "traefik-http"
-            provider = "nomad"
+            provider = "consul"
             port = "http"
 
             check {
@@ -46,16 +46,29 @@ job "traefik" {
                     "--entrypoints.web.address=:${NOMAD_PORT_http}",
                     "--entrypoints.traefik.address=:${NOMAD_PORT_admin}",
                     "--providers.nomad=true",
-                    "--providers.nomad.endpoint.address=http://192.168.1.22:4646",
+                    ## ${NOMAD_ADDRESS} is loaded from the env.
+                    #  Set this variable in Nomad's webUI before running this job.
+                    "--providers.nomad.endpoint.address=http://${NOMAD_ADDRESS}:4646",
                     "--providers.consulcatalog.refreshInterval=30s",
-                    # "--providers.consulcatalog.prefix=lab1",
-                    "--providers.consulcatalog.endpoint.address=192.168.1.22:8500",
+                    "--providers.consulcatalog.endpoint.address=${NOMAD_ADDRESS}:8500",
                     "--providers.consulcatalog.endpoint.scheme=http",
-                    "--providers.consulcatalog.endpoint.datacenter=lab1",
+                    "--providers.consulcatalog.endpoint.datacenter=${DC_NAME}",
                     "--providers.consulcatalog.connectAware=true",
-                    "--providers.consulcatalog.serviceName=traefik",
+                    "--providers.consulcatalog.serviceName=traefik-ingress",
                     "--providers.consulcatalog.watch=true"
                 ]
+            }
+
+            template {
+                destination = "${NOMAD_SECRETS_DIR}/env.vars"
+                env = true
+                change_mode = "restart"
+                data = <<EOF
+{{- with nomadVar "nomad/jobs/traefik-ingress" -}}
+NOMAD_ADDRESS = {{ .NOMAD_ADDRESS }}
+DC_NAME = {{ .DC_NAME }}
+{{- end -}}
+EOF
             }
 
             resources {
