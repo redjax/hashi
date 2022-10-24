@@ -21,7 +21,7 @@ advertise_addr="192.168.1.22"
 
 ## Make sure at least 1 arg was passed, then prompt for password
 if [[ ! $1 == "" ]]; then
-    read -p "Remote server sudo password: " ssh_pass
+    read -ps "Remote server sudo password: " ssh_pass
 fi
 
 ## Functions
@@ -99,6 +99,16 @@ function install_consul() {
 
 }
 
+function install_vault() {
+    ## Install Vault. $1 dictates install type (server, client, both)
+
+    hashi-up vault install \
+        --local \
+        --storage consul \
+        --consul-path "vault/"
+
+}
+
 ## Create empty array for positional arguments
 POSITIONAL_ARGS=()
 
@@ -172,6 +182,9 @@ case $SERVICE in
             ;;
         esac
     ;;
+    "vault")
+        install_vault
+    ;;
     "nomad,consul" | "nomad+consul" | "nomad-consul" | "consul,nomad" | "consul+nomad" | "consul-nomad")
         case $INSTALL_TYPE in
             "server")
@@ -194,5 +207,34 @@ case $SERVICE in
                 echo "  Options: server, client, {server,client | server+client | server-client}"
             ;;
         esac
+    ;;
+    "all")
+        case $INSTALL_TYPE in
+            "server")
+                echo "Install Nomad (server), Consul (server), & Vault"
+                install_consul server
+                install_nomad server
+                install_vault
+            ;;
+            "client")
+                echo "Install Nomad (client), Consul (client), & Vault"
+                install_consul client
+                install_nomad client
+                install_vault
+            ;;
+            "server,client" | "server+client" | "server-client")
+                echo "Install Nomad (server + client), Consul (server + client), & Vault"
+                install_consul both
+                install_nomad both
+                install_vault
+            ;;
+            "*" | "")
+                echo "Invalid install type: $INSTALL_TYPE"
+                echo "  Options: server, client, {server,client | server+client | server-client}"
+            ;;
+        esac
+    ;;
+    "*" | "")
+        echo "Invalid option for Service: $SERVICE"
     ;;
 esac
