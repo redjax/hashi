@@ -26,3 +26,5 @@ client {
     read_only = false
   }
 }
+
+## Plugins
